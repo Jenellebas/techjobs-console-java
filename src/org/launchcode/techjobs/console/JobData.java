@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LaunchCode
@@ -75,14 +76,43 @@ public class JobData {
         for (HashMap<String, String> row : allJobs) {
 
             String aValue = row.get(column);
-
-            if (aValue.contains(value)) {
+            String aValue2 = aValue.toLowerCase();
+            String value2 = value.toLowerCase();
+            if (aValue2.contains(value2)) {
                 jobs.add(row);
             }
         }
 
         return jobs;
     }
+
+    /**
+     * Returns results of searching ALL COLUMNS in the jobs data by key/value, searching all columns for the
+     * inclusion of the search term.
+     * @param value Value of the field to search for (provided by user)
+     * @return List of all jobs matching the criteria
+     */
+
+    public static ArrayList<HashMap<String, String>> findbyValue(String value) {
+        //load data, if not already loaded
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobsList = new ArrayList<>();
+        for (HashMap<String, String> row : allJobs) {         //for each row in allJobs
+            for (Map.Entry<String, String> aValue : row.entrySet()) {
+                String item = aValue.getValue();             //item = each value in each aValue
+                String item2 = item.toLowerCase();
+                String value2 = value.toLowerCase();
+                if (item2.contains(value2)) {      //search each column
+                    if (!jobsList.contains(row)) {
+                        jobsList.add(row);
+                    }
+                }
+            }
+        }
+        return jobsList;
+    }
+
 
     /**
      * Read in data from a CSV file and store it in a list
